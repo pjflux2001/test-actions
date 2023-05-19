@@ -26,7 +26,7 @@ jobs:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
-          if grep -qF true ./flag; then
+          if grep -qF false ./flag; then
             python3 -m pip install --upgrade build
             python3 -m build
             python3 -m pip install --upgrade twine
