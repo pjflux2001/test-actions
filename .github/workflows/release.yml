@@ -1,39 +1,44 @@
-name: Publish to PyPI
+name: Dependent Workflow
+
 on:
   push:
     branches:
-      - main  # Change this to your main branch name
+      - main
+
 jobs:
-  build:
+  step1:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.x  # Change this to the desired Python version
-          
-      - name: Check condition
-        id: condition-check
+      - name: Step 1
+        id: step1
         run: |
-          # Add your condition checking logic here
-          # You can use shell commands, scripts, or even programming languages like Python or JavaScript
-          # The condition should set an output variable 'should-push' to either 'true' or 'false'
-          echo "should-push:true" # Replace with your condition check code
+          # Add your Step 1 logic here
+          # Set an output variable named 'output1' with the desired value
+          echo "::set-output name=output1::Step 1 Output"
 
-      - name: Build and publish package
-        env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: |
-          echo ${{ steps.condition-check.outputs }}
-          python3 -m pip install --upgrade build
-          python3 -m build
-          python3 -m pip install --upgrade twine
-          python3 -m twine upload --repository testpypi dist/*
+  step2:
+    needs: step1
+    runs-on: ubuntu-latest
 
-      - name: Test
+    steps:
+      - name: Step 2
+        id: step2
         run: |
-          ls -al ./dist
+          # Add your Step 2 logic here
+          # Use the output from Step 1 using ${{ needs.step1.outputs.output1 }}
+          echo "Step 2 Input: ${{ needs.step1.outputs.output1 }}"
+          echo "::set-output name=output2::Step 2 Output"
+
+  step3:
+    needs: step2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Step 3
+        id: step3
+        run: |
+          # Add your Step 3 logic here
+          # Use the output from Step 2 using ${{ needs.step2.outputs.output2 }}
+          echo "Step 3 Input: ${{ needs.step2.outputs.output2 }}"
+          echo "::set-output name=output3::Step 3 Output"
