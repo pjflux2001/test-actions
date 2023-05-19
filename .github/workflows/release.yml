@@ -18,7 +18,7 @@ jobs:
           # Add the commands to publish the artifact
           # This step generates an artifact that will be used in the next job
           echo "Publishing artifact..."
-          echo "::set-output name=artifact-path::/path/to/artifact.zip"
+          echo "/path/to/artifact.zip" > ${{ runner.workspace }}/artifact-path
   
   deploy:
     needs: build
@@ -32,6 +32,6 @@ jobs:
         run: |
           # Download the artifact generated in the previous job
           echo "Downloading artifact..."
-          echo "Artifact path: ${{ needs.build.outputs.artifact-path }}"
+          echo "Artifact path: $(cat ${{ runner.workspace }}/artifact-path)"
       
       # Add your deployment steps here
