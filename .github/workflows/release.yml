@@ -14,8 +14,17 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.x  # Change this to the desired Python version
+          
+      - name: Check condition
+        id: condition-check
+        run: |
+          # Add your condition checking logic here
+          # You can use shell commands, scripts, or even programming languages like Python or JavaScript
+          # The condition should set an output variable 'should-push' to either 'true' or 'false'
+          should-push='true' # Replace with your condition check code
 
       - name: Build and publish package
+        if: ${{ steps.condition-check.outputs.should-push == 'true' }}
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
