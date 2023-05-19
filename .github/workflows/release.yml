@@ -24,11 +24,11 @@ jobs:
           echo "should-push:true" # Replace with your condition check code
 
       - name: Build and publish package
-        if: ${{ steps.condition-check.outputs.should-push == true }}
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
+          echo ${{ steps.condition-check.outputs.should-push }}
           python3 -m pip install --upgrade build
           python3 -m build
           python3 -m pip install --upgrade twine
