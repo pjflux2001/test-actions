@@ -21,7 +21,7 @@ jobs:
           # Add your condition checking logic here
           # You can use shell commands, scripts, or even programming languages like Python or JavaScript
           # The condition should set an output variable 'should-push' to either 'true' or 'false'
-          should-push='true' # Replace with your condition check code
+          echo "should-push:true" # Replace with your condition check code
 
       - name: Build and publish package
         if: ${{ steps.condition-check.outputs.should-push == 'true' }}
