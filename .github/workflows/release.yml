@@ -14,8 +14,10 @@ jobs:
         id: step1
         run: |
           # Add your Step 1 logic here
-          # Set an output variable named 'output1' with the desired value
-          echo "::set-output name=output1::Step 1 Output"
+          echo "Step 1 Output" >> step1_output.txt
+
+    outputs:
+      output1: ${{ steps.step1.outputs.output1 }}
 
   step2:
     needs: step1
@@ -28,7 +30,10 @@ jobs:
           # Add your Step 2 logic here
           # Use the output from Step 1 using ${{ needs.step1.outputs.output1 }}
           echo "Step 2 Input: ${{ needs.step1.outputs.output1 }}"
-          echo "::set-output name=output2::Step 2 Output"
+          echo "Step 2 Output" >> step2_output.txt
+
+    outputs:
+      output2: ${{ steps.step2.outputs.output2 }}
 
   step3:
     needs: step2
@@ -41,4 +46,7 @@ jobs:
           # Add your Step 3 logic here
           # Use the output from Step 2 using ${{ needs.step2.outputs.output2 }}
           echo "Step 3 Input: ${{ needs.step2.outputs.output2 }}"
-          echo "::set-output name=output3::Step 3 Output"
+          echo "Step 3 Output" >> step3_output.txt
+
+    outputs:
+      output3: ${{ steps.step3.outputs.output3 }}
