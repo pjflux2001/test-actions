@@ -1,32 +1,27 @@
-name: Dependent Workflow
-
-on: push
-
+name: Publish to PyPI
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch name
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
-      # Add your build and test steps here
-      
-      - name: Publish artifact
-        id: publish-artifact
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x  # Change this to the desired Python version
+      - name: Build and publish package
+        env:
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
-          # Add the commands to publish the artifact
-          # This step generates an artifact that will be used in the next job
-          echo "Publishing artifact..."
-          echo "/path/to/artifact.zip" > ${{ runner.workspace }}/artifact-path
-  
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Download artifact
+          python3 -m pip install --upgrade build
+          python3 -m build
+          python3 -m pip install --upgrade twine
+          python3 -m twine upload --repository testpypi dist/*
+      - name: Test
         run: |
-          # Download the artifact generated in the previous job
-          echo "Downloading artifact..."
-          echo "Artifact path: $(cat ${{ runner.workspace }}/artifact-path)"
-      
-      # Add your deployment steps here
+          ls -al .
