@@ -1,52 +1,37 @@
 name: Dependent Workflow
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
-  step1:
+  build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Step 1
-        id: step1
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      # Add your build and test steps here
+      
+      - name: Publish artifact
+        id: publish-artifact
         run: |
-          # Add your Step 1 logic here
-          echo "Step 1 Output" >> step1_output.txt
-
-    outputs:
-      output1: ${{ steps.step1.outputs.output1 }}
-
-  step2:
-    needs: step1
+          # Add the commands to publish the artifact
+          # This step generates an artifact that will be used in the next job
+          echo "Publishing artifact..."
+          echo "::set-output name=artifact-path::/path/to/artifact.zip"
+  
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Step 2
-        id: step2
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Download artifact
         run: |
-          # Add your Step 2 logic here
-          # Use the output from Step 1 using ${{ needs.step1.outputs.output1 }}
-          echo "Step 2 Input: ${{ needs.step1.outputs.output1 }}"
-          echo "Step 2 Output" >> step2_output.txt
-
-    outputs:
-      output2: ${{ steps.step2.outputs.output2 }}
-
-  step3:
-    needs: step2
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Step 3
-        id: step3
-        run: |
-          # Add your Step 3 logic here
-          # Use the output from Step 2 using ${{ needs.step2.outputs.output2 }}
-          echo "Step 3 Input: ${{ needs.step2.outputs.output2 }}"
-          echo "Step 3 Output" >> step3_output.txt
-
-    outputs:
-      output3: ${{ steps.step3.outputs.output3 }}
+          # Download the artifact generated in the previous job
+          echo "Downloading artifact..."
+          echo "Artifact path: ${{ needs.build.outputs.artifact-path }}"
+      
+      # Add your deployment steps here
