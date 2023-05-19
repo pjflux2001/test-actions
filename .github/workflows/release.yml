@@ -20,11 +20,6 @@ jobs:
           echo "Publishing artifact..."
           echo "/path/to/artifact.zip" > ${{ runner.workspace }}/artifact-path
   
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
       - name: Checkout code
         uses: actions/checkout@v2
       
